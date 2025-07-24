@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Generating envoy.yaml..."
+echo "🔧 Генерация envoy.yaml на основе UI-конфигурации..."
 
 CONFIG_PATH=/data/options.json
 
@@ -63,12 +63,13 @@ static_resources:
                       port_value: ${PORT}
 
 admin:
-  access_log_path: "/tmp/admin_access.log"
+  access_log_path: "/tmp/envoy_admin.log"
   address:
     socket_address:
       address: 0.0.0.0
       port_value: 9901
 EOF
 
-echo "✅ envoy.yaml created. Starting envoy..."
-exec envoy -c /etc/envoy/envoy.yaml --log-level info
+echo "✅ envoy.yaml сгенерирован"
+echo "🚀 Запуск Envoy Proxy..."
+exec envoy --config-path /etc/envoy/envoy.yaml --log-level info

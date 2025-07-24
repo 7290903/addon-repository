@@ -23,11 +23,11 @@
     "broker4": "str"
   },
   "ports": {
-    "1883/tcp": 1883,
+    "1885/tcp": 1885,
     "9901/tcp": 9901
   },
   "ports_description": {
-    "1883/tcp": "MQTT Proxy Port",
+    "1885/tcp": "MQTT Proxy Port",
     "9901/tcp": "Envoy Admin Port"
   }
 }
