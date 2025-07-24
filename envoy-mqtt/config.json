@@ -3,10 +3,19 @@
   "version": "1.0.0",
   "slug": "envoy_mqtt",
   "description": "Envoy TCP proxy with MQTT failover support",
-  "arch": ["amd64"],
+  "arch": ["amd64", "aarch64", "armv7"],
   "startup": "services",
   "boot": "auto",
   "host_network": true,
   "legacy": true,
-  "schema": {}
+  "schema": {},
+  "environment": {},
+  "ports": {
+    "1883/tcp": 1883,
+    "9901/tcp": 9901
+  },
+  "ports_description": {
+    "1883/tcp": "MQTT Proxy Port",
+    "9901/tcp": "Envoy Admin Port"
+  }
 }
