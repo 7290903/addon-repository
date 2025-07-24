@@ -2,7 +2,7 @@
   "name": "Envoy MQTT Proxy",
   "version": "1.0.0",
   "slug": "envoy_mqtt",
-  "description": "Envoy TCP proxy that enables MQTT failover between two brokers",
+  "description": "Envoy TCP proxy that enables MQTT",
   "arch": ["armhf", "armv7", "amd64", "aarch64"],
   "startup": "services",
   "boot": "auto",
