@@ -3,7 +3,7 @@ static_resources:
     - name: mqtt_listener
       address:
         socket_address:
-          address: localhost
+          address: 0.0.0.0
           port_value: 1885
       filter_chains:
         - filters:
@@ -43,5 +43,5 @@ admin:
   access_log_path: "/tmp/admin_access.log"
   address:
     socket_address:
-      address: localhost
+      address: 0.0.0.0
       port_value: 9901
