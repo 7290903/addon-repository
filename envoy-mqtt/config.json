@@ -1,12 +1,13 @@
 {
-  "name": "Test MQTT Proxy",
+  "name": "Envoy MQTT Proxy",
   "version": "1.0.0",
-  "slug": "envoy-mqtt",
-  "description": "Minimal test MQTT proxy addon",
-  "arch": ["amd64"],
+  "slug": "envoy_mqtt",
+  "description": "Envoy TCP proxy with MQTT failover support",
+  "arch": ["amd64", "aarch64", "armv7"],
   "startup": "services",
   "boot": "auto",
   "host_network": true,
+  "privileged": true,
   "legacy": true,
   "schema": {}
 }
