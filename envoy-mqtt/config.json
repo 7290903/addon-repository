@@ -8,14 +8,6 @@
   "boot": "auto",
   "host_network": true,
   "privileged": true,
-  "ports": {
-    "1883/tcp": 1883,
-    "9901/tcp": 9901
-  },
-  "ports_description": {
-    "1883/tcp": "MQTT Proxy Port",
-    "9901/tcp": "Envoy Admin Port"
-  },
   "legacy": true,
   "schema": {},
   "environment": {}
