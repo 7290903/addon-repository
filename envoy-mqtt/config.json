@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "slug": "envoy_mqtt",
   "description": "Envoy TCP proxy with MQTT failover support",
-  "arch": ["amd64", "aarch64", "armv7"],
+  "arch": ["amd64"],
   "startup": "services",
   "boot": "auto",
   "host_network": true,
