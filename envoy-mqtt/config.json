@@ -1,0 +1,23 @@
+{
+  "name": "Envoy MQTT Proxy",
+  "version": "1.0.0",
+  "slug": "envoy_mqtt",
+  "description": "Envoy TCP proxy that enables MQTT failover between two brokers",
+  "url": "https://github.com/7290903/envoy",
+  "arch": ["amd64", "aarch64", "armv7"],
+  "startup": "services",
+  "boot": "auto",
+  "host_network": true,
+  "privileged": true,
+  "panel_icon": "mdi:access-point-network",
+  "panel_admin": false,
+  "ports": {
+    "1883/tcp": 1883,
+    "9901/tcp": 9901
+  },
+  "ports_description": {
+    "1883/tcp": "MQTT proxy port",
+    "9901/tcp": "Envoy admin interface"
+  },
+  "schema": {}
+}
