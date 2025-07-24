@@ -1,15 +1,27 @@
 {
   "name": "Envoy MQTT Proxy",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "slug": "envoy_mqtt",
-  "description": "Envoy TCP proxy with MQTT failover support",
+  "description": "Envoy TCP proxy with MQTT failover for 4 brokers",
   "arch": ["amd64", "aarch64", "armv7"],
   "startup": "services",
   "boot": "auto",
   "host_network": true,
   "legacy": true,
-  "schema": {},
-  "environment": {},
+  "options": {
+    "port": 1883,
+    "broker1": "192.168.0.101",
+    "broker2": "192.168.0.102",
+    "broker3": "192.168.0.103",
+    "broker4": "192.168.0.104"
+  },
+  "schema": {
+    "port": "int(1,65535)",
+    "broker1": "str",
+    "broker2": "str",
+    "broker3": "str",
+    "broker4": "str"
+  },
   "ports": {
     "1883/tcp": 1883,
     "9901/tcp": 9901
