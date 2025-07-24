@@ -4,7 +4,7 @@
   "slug": "envoy_mqtt",
   "description": "Envoy TCP proxy that enables MQTT",
   "arch": ["armhf", "armv7", "amd64", "aarch64"],
-  "startup": "services",
+  "startup": "aplication",
   "boot": "auto",
   "host_network": true,
   "privileged": true,
