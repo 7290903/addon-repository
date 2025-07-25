@@ -9,6 +9,7 @@
   "host_network": true,
   "map": ["config:rw"],
   "tmpfs": true,
+  "build": true,
   "options": {
     "port": 1885,
     "broker1": "192.168.2.48",
@@ -23,6 +24,5 @@
     "broker3": "str",
     "broker4": "str"
   },
-  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
-  "image": "local/envoy_mqtt"
+  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"]
 }
