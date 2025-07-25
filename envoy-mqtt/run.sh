@@ -1,67 +1,82 @@
 #!/bin/bash
 
+CONFIG_PATH="/data/options.json"
+ENVOY_CONFIG="/tmp/envoy.yaml"
+
 echo "🔧 Генерация envoy.yaml на основе UI-конфигурации..."
 
-CONFIG_PATH=/data/options.json
-ENVOY_CONFIG=/etc/envoy/envoy.yaml
+# Ждём, пока Home Assistant смонтирует конфиг
+while [ ! -f "$CONFIG_PATH" ]; do
+  echo "⏳ Ждём появления конфигурации Home Assistant ($CONFIG_PATH)..."
+  sleep 1
+done
 
-PORT=$(jq -r '.port' "$CONFIG_PATH")
+# Получаем порт и список брокеров из options.json
+PORT=$(jq -r '.port // 1883' "$CONFIG_PATH")
 BROKERS=$(jq -r '.brokers[]' "$CONFIG_PATH")
-BROKER_PORT=1883  # Порты брокеров фиксированные
 
-mkdir -p /etc/envoy
+if [[ -z "$PORT" || -z "$BROKERS" ]]; then
+  echo "❌ Ошибка: не удалось получить настройки порта или брокеров."
+  exit 1
+fi
 
+# Генерируем список кластеров
+CLUSTERS=""
+ENDPOINTS=""
+INDEX=0
+for BROKER in $BROKERS; do
+  CLUSTER_NAME="mqtt_target_$INDEX"
+  CLUSTERS+=$(cat <<EOF
+
+  - name: $CLUSTER_NAME
+    connect_timeout: 1s
+    type: LOGICAL_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: $CLUSTER_NAME
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: $BROKER
+                port_value: $PORT
+EOF
+)
+  INDEX=$((INDEX+1))
+done
+
+# Генерируем envoy.yaml
 cat > "$ENVOY_CONFIG" <<EOF
 static_resources:
   listeners:
-    - name: mqtt_listener
-      address:
-        socket_address:
-          address: 0.0.0.0
-          port_value: ${PORT}
-      filter_chains:
-        - filters:
-            - name: envoy.filters.network.tcp_proxy
-              typed_config:
-                "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
-                stat_prefix: mqtt
-                cluster: mqtt_cluster
-
-  clusters:
-    - name: mqtt_cluster
-      connect_timeout: 1s
-      type: strict_dns
-      lb_policy: ROUND_ROBIN
-      health_checks:
-        - timeout: 1s
-          interval: 5s
-          unhealthy_threshold: 2
-          healthy_threshold: 2
-          tcp_health_check: {}
-      load_assignment:
-        cluster_name: mqtt_cluster
-        endpoints:
-          - lb_endpoints:
+  - name: listener_0
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: $PORT
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.tcp_proxy
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
+          stat_prefix: mqtt_tcp
+          cluster: mqtt_target_0
+          weighted_clusters:
+            clusters:
 EOF
 
-for addr in $BROKERS; do
-cat >> "$ENVOY_CONFIG" <<EOF
-              - endpoint:
-                  address:
-                    socket_address:
-                      address: ${addr}
-                      port_value: ${BROKER_PORT}
-EOF
+INDEX=0
+for BROKER in $BROKERS; do
+  echo "              - name: mqtt_target_$INDEX" >> "$ENVOY_CONFIG"
+  echo "                weight: 1" >> "$ENVOY_CONFIG"
+  INDEX=$((INDEX+1))
 done
 
 cat >> "$ENVOY_CONFIG" <<EOF
 
-admin:
-  access_log_path: "/tmp/envoy_admin.log"
-  address:
-    socket_address:
-      address: 0.0.0.0
-      port_value: 9901
+  clusters:
+$CLUSTERS
 EOF
 
 echo "✅ envoy.yaml сгенерирован:"
