@@ -1,28 +1,28 @@
 {
-  "name": "MQTT TCP Failover (Envoy)",
-  "version": "1.0.0",
+  "name": "Envoy MQTT",
+  "version": "1.0.1",
   "slug": "envoy_mqtt",
-  "description": "TCP-прокси с фейловером между несколькими MQTT-брокерами через Envoy Proxy.",
+  "description": "TCP-фейловер между несколькими MQTT-брокерами через Envoy Proxy",
   "startup": "services",
   "boot": "auto",
-  "panel_icon": "mdi:lan",
   "host_network": true,
-  "map": ["config:rw"],
   "tmpfs": true,
-  "build": true,
+  "map": ["config:rw"],
   "options": {
     "port": 1885,
-    "broker1": "192.168.2.48",
-    "broker2": "192.168.2.33",
-    "broker3": "192.168.2.33",
-    "broker4": "192.168.2.33"
+    "brokers": [
+      "192.168.2.48",
+      "192.168.2.33",
+      "192.168.2.34",
+      "192.168.2.35"
+    ]
   },
   "schema": {
     "port": "int(1,65535)",
-    "broker1": "str",
-    "broker2": "str",
-    "broker3": "str",
-    "broker4": "str"
+    "brokers": [
+      "str"
+    ]
   },
-  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"]
+  "arch": ["amd64", "armv7", "armhf", "aarch64"],
+  "image": "local/envoy_mqtt"
 }

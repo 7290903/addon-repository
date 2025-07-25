@@ -2,24 +2,12 @@
 
 echo "🔧 Генерация envoy.yaml на основе UI-конфигурации..."
 
-CONFIG_PATH="/data/options.json"
-ENVOY_CONFIG="/etc/envoy/envoy.yaml"
+CONFIG_PATH=/data/options.json
+ENVOY_CONFIG=/etc/envoy/envoy.yaml
 
-# Проверим наличие
-if [ ! -f "$CONFIG_PATH" ]; then
-  echo "❌ Нет options.json"
-  exit 1
-fi
-
-# Читаем UI-параметры
 PORT=$(jq -r '.port' "$CONFIG_PATH")
-BROKER1=$(jq -r '.broker1' "$CONFIG_PATH")
-BROKER2=$(jq -r '.broker2' "$CONFIG_PATH")
-BROKER3=$(jq -r '.broker3' "$CONFIG_PATH")
-BROKER4=$(jq -r '.broker4' "$CONFIG_PATH")
-
-# Общий порт для всех брокеров
-BROKER_PORT=1883
+BROKERS=$(jq -r '.brokers[]' "$CONFIG_PATH")
+BROKER_PORT=1883  # Порты брокеров фиксированные
 
 mkdir -p /etc/envoy
 
@@ -54,26 +42,19 @@ static_resources:
         cluster_name: mqtt_cluster
         endpoints:
           - lb_endpoints:
+EOF
+
+for addr in $BROKERS; do
+cat >> "$ENVOY_CONFIG" <<EOF
               - endpoint:
                   address:
                     socket_address:
-                      address: ${BROKER1}
+                      address: ${addr}
                       port_value: ${BROKER_PORT}
-              - endpoint:
-                  address:
-                    socket_address:
-                      address: ${BROKER2}
-                      port_value: ${BROKER_PORT}
-              - endpoint:
-                  address:
-                    socket_address:
-                      address: ${BROKER3}
-                      port_value: ${BROKER_PORT}
-              - endpoint:
-                  address:
-                    socket_address:
-                      address: ${BROKER4}
-                      port_value: ${BROKER_PORT}
+EOF
+done
+
+cat >> "$ENVOY_CONFIG" <<EOF
 
 admin:
   access_log_path: "/tmp/envoy_admin.log"
@@ -83,9 +64,8 @@ admin:
       port_value: 9901
 EOF
 
-echo "✅ envoy.yaml сгенерирован"
+echo "✅ envoy.yaml сгенерирован:"
 cat "$ENVOY_CONFIG"
 
 echo "🚀 Запуск Envoy Proxy..."
-echo "📦 Слушаем порт: $PORT"
 exec envoy --config-path "$ENVOY_CONFIG" --log-level info
