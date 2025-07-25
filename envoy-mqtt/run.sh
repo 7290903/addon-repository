@@ -73,3 +73,5 @@ EOF
 echo "✅ envoy.yaml сгенерирован"
 echo "🚀 Запуск Envoy Proxy..."
 exec envoy --config-path /etc/envoy/envoy.yaml --log-level info
+echo "========== envoy.yaml =========="
+cat /etc/envoy/envoy.yaml
