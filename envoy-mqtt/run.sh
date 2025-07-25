@@ -2,15 +2,28 @@
 
 echo "🔧 Генерация envoy.yaml на основе UI-конфигурации..."
 
-CONFIG_PATH=/data/options.json
+CONFIG_PATH="/data/options.json"
+ENVOY_CONFIG="/etc/envoy/envoy.yaml"
 
+# Проверим наличие
+if [ ! -f "$CONFIG_PATH" ]; then
+  echo "❌ Нет options.json"
+  exit 1
+fi
+
+# Читаем UI-параметры
 PORT=$(jq -r '.port' "$CONFIG_PATH")
 BROKER1=$(jq -r '.broker1' "$CONFIG_PATH")
 BROKER2=$(jq -r '.broker2' "$CONFIG_PATH")
 BROKER3=$(jq -r '.broker3' "$CONFIG_PATH")
 BROKER4=$(jq -r '.broker4' "$CONFIG_PATH")
 
-cat > /etc/envoy/envoy.yaml <<EOF
+# Общий порт для всех брокеров
+BROKER_PORT=1883
+
+mkdir -p /etc/envoy
+
+cat > "$ENVOY_CONFIG" <<EOF
 static_resources:
   listeners:
     - name: mqtt_listener
@@ -45,22 +58,22 @@ static_resources:
                   address:
                     socket_address:
                       address: ${BROKER1}
-                      port_value: ${PORT}
+                      port_value: ${BROKER_PORT}
               - endpoint:
                   address:
                     socket_address:
                       address: ${BROKER2}
-                      port_value: ${PORT}
+                      port_value: ${BROKER_PORT}
               - endpoint:
                   address:
                     socket_address:
                       address: ${BROKER3}
-                      port_value: ${PORT}
+                      port_value: ${BROKER_PORT}
               - endpoint:
                   address:
                     socket_address:
                       address: ${BROKER4}
-                      port_value: ${PORT}
+                      port_value: ${BROKER_PORT}
 
 admin:
   access_log_path: "/tmp/envoy_admin.log"
@@ -71,7 +84,8 @@ admin:
 EOF
 
 echo "✅ envoy.yaml сгенерирован"
+cat "$ENVOY_CONFIG"
+
 echo "🚀 Запуск Envoy Proxy..."
-exec envoy --config-path /etc/envoy/envoy.yaml --log-level info
-echo "========== envoy.yaml =========="
-cat /etc/envoy/envoy.yaml
+echo "📦 Слушаем порт: $PORT"
+exec envoy --config-path "$ENVOY_CONFIG" --log-level info
