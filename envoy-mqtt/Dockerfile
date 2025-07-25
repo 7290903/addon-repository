@@ -15,3 +15,6 @@ RUN apt-get update && \
 # Точка входа
 USER root
 CMD ["/run.sh"]
+
+echo "🧾 UID: $(id -u), GID: $(id -g)"
+ls -l "$CONFIG_PATH"
