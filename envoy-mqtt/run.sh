@@ -3,6 +3,12 @@
 CONFIG_PATH="/data/options.json"
 ENVOY_CONFIG="/tmp/envoy.yaml"
 
+echo "🧾 UID: $(id -u), GID: $(id -g)"
+echo "📂 Содержимое /data:"
+ls -la /data
+echo "📄 Права на $CONFIG_PATH:"
+ls -l "$CONFIG_PATH"
+
 echo "🔧 Генерация envoy.yaml на основе UI-конфигурации..."
 
 # Ждём, пока Home Assistant смонтирует конфиг
@@ -10,6 +16,7 @@ while [ ! -f "$CONFIG_PATH" ]; do
   echo "⏳ Ждём появления конфигурации Home Assistant ($CONFIG_PATH)..."
   sleep 1
 done
+
 
 # Получаем порт и список брокеров из options.json
 PORT=$(jq -r '.port // 1883' "$CONFIG_PATH")
