@@ -13,4 +13,5 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Точка входа
+USER root
 CMD ["/run.sh"]
