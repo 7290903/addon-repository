@@ -8,7 +8,7 @@ RUN chmod +x /run.sh
 
 # Установим утилиту jq для чтения JSON
 RUN apt-get update && \
-    apt-get install -y jq && \
+    apt-get install -y jq bash && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
