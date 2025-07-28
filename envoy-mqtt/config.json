@@ -7,6 +7,7 @@
   "startup": "services",
   "boot": "auto",
   "host_network": true,
+  "legacy": true,
   "map": ["config:rw"],
   "tmpfs": true,
   "build": true,
