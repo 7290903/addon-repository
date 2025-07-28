@@ -1,4 +1,8 @@
-# 🛰️ Envoy MQTT Failover
+<p align="center">
+  <img src="https://github.com/7290903/addon-repository/blob/main/envoy-mqtt/logo.png" alt="Envoy MQTT Failover by RunHouse" width="120" />
+</p>
+
+# Envoy MQTT Failover
 
 **TCP-фейловер между несколькими MQTT-брокерами через Envoy Proxy**
 
