@@ -1,7 +1,7 @@
 {
   "name": "Envoy MQTT Failover",
   "version": "1.0.0",
-  "slug": "envoy_mqtt_failover",
+  "slug": "envoy_mqtt",
   "description": "TCP-фейловер между несколькими MQTT-брокерами через Envoy Proxy",
   "startup": "services",
   "boot": "auto",
