@@ -11,7 +11,7 @@
   "tmpfs": true,
   "build": true,
   "options": {
-    "port": 1883,
+    "port": 1885,
     "brokers": []
   },
   "schema": {
