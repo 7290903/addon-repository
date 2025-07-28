@@ -7,19 +7,10 @@
   "startup": "services",
   "boot": "auto",
   "host_network": true,
-  "map": ["config:rw"],
+  "map": ["config:ro"],  
   "tmpfs": true,
-  
-  "options": {
-    "port": 1885,
-    "brokers": [
-      "192.168.2.48",
-      "192.168.2.33"
-    ]
-  },
-  "schema": {
-    "port": "int(1,65535)",
-    "brokers": "list(str)"
-  },
+  "build": true,
+  "options": {},
+  "schema": {},
   "arch": ["armhf", "armv7", "amd64", "aarch64"]
 }
