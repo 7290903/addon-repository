@@ -5,18 +5,23 @@ TMP_CONFIG="/tmp/options.json"
 ENVOY_CONFIG="/tmp/envoy.yaml"
 
 echo "🔧 Генерация envoy.yaml на основе UI-конфигурации..."
+echo "🧾 UID: $(id -u), GID: $(id -g)"
 
-# Ждём, пока options.json появится
+# Ждём появления /data/options.json
 while [ ! -f "$CONFIG_PATH" ]; do
   echo "⏳ Ожидаем появления $CONFIG_PATH..."
   sleep 1
 done
 
-# Копируем файл во временное место
-cp "$CONFIG_PATH" "$TMP_CONFIG"
+# Пробуем скопировать конфиг в tmp (RAM)
+cp "$CONFIG_PATH" "$TMP_CONFIG" 2>/dev/null
 
-# Чтение параметров
-PORT=$(jq -r '.port' "$TMP_CONFIG")
+if [ ! -f "$TMP_CONFIG" ]; then
+  echo "❌ Не удалось скопировать $CONFIG_PATH. Проверьте разрешения или map: config:rw"
+  exit 1
+fi
+
+PORT=$(jq -r '.port // 1883' "$TMP_CONFIG")
 BROKERS=$(jq -r '.brokers[]' "$TMP_CONFIG")
 
 if [[ -z "$PORT" || -z "$BROKERS" ]]; then
