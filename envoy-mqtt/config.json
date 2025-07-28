@@ -1,23 +1,24 @@
 {
   "name": "Envoy MQTT Failover",
-  "version": "1.0.1",
-  "slug": "envoy_mqtt",
+  "version": "1.0.0",
+  "slug": "envoy_mqtt_failover",
   "description": "TCP-фейловер между несколькими MQTT-брокерами через Envoy Proxy",
-  "arch": ["amd64", "armv7", "armhf", "aarch64"],
-  "url": "https://github.com/7290903/addon-repository",
   "startup": "services",
   "boot": "auto",
   "host_network": true,
   "map": ["config:rw"],
   "tmpfs": true,
+  "build": true,
   "options": {
     "port": 1885,
-    "brokers": []
+    "brokers": [
+      "192.168.2.48",
+      "192.168.2.33"
+    ]
   },
   "schema": {
-    "port": "int(1, 65535)",
-    "brokers": [
-      "str"
-    ]
-  }
+    "port": "int",
+    "brokers": ["str"]
+  },
+  "arch": ["armhf", "armv7", "amd64", "aarch64"]
 }
