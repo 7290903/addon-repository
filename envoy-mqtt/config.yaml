@@ -1,9 +1,12 @@
-name: Envoy MQTT Proxy
-version: "1.0"
-slug: envoy-mqtt
-description: Envoy TCP proxy for MQTT failover
-startup: services
-boot: auto
-host_network: true
-privileged: false
-schema: {}
+{
+  "name": "Envoy MQTT Proxy",
+  "version": "1.0.0",
+  "slug": "envoy_mqtt",
+  "description": "TCP failover proxy for MQTT using Envoy",
+  "arch": ["amd64", "armv7", "aarch64"],
+  "startup": "services",
+  "boot": "auto",
+  "host_network": true,
+  "legacy": true,
+  "schema": {}
+}
