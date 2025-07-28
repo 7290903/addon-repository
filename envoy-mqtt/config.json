@@ -18,8 +18,8 @@
     ]
   },
   "schema": {
-    "port": "int",
-    "brokers": ["str"]
+    "port": "int(1,65535)",
+    "brokers": "list(str)"
   },
   "arch": ["armhf", "armv7", "amd64", "aarch64"]
 }
