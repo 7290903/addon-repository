@@ -5,16 +5,16 @@ echo "🧾 UID: $(id -u), GID: $(id -g)"
 
 PORT="${PORT:-1883}"
 
-# Собираем список брокеров из окружения
+# Сбор брокеров из переменных окружения BROKERS_0, BROKERS_1, ...
 BROKERS=()
 i=0
 while true; do
-    VAR_NAME="BROKERS_$i"
-    VAL="${!VAR_NAME}"
-    if [ -z "$VAL" ]; then
+    broker_var="BROKERS_$i"
+    val="${!broker_var}"
+    if [ -z "$val" ]; then
         break
     fi
-    BROKERS+=("$VAL")
+    BROKERS+=("$val")
     i=$((i+1))
 done
 
