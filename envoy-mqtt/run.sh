@@ -3,6 +3,7 @@
 echo "🔧 Генерация envoy.yaml на основе UI-конфигурации..."
 
 CONFIG_PATH="/data/options.json"
+chmod 644 "$CONFIG_PATH"
 ENVOY_CONFIG="/tmp/envoy.yaml"
 
 # Ждём пока options.json появится
