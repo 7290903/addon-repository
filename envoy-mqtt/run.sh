@@ -3,7 +3,7 @@
 echo "🔧 Генерация envoy.yaml на основе UI-конфигурации..."
 
 CONFIG_PATH="/data/options.json"
-chmod 644 "$CONFIG_PATH"
+
 ENVOY_CONFIG="/tmp/envoy.yaml"
 
 # Ждём пока options.json появится
@@ -18,6 +18,9 @@ echo "📂 Содержимое /data:"
 ls -l /data
 echo "📄 Права на $CONFIG_PATH:"
 ls -l "$CONFIG_PATH"
+
+# 👉 Вот эта строчка решает проблему прав доступа:
+chown "$(id -u)":"$(id -g)" "$CONFIG_PATH"
 
 PORT=$(jq -r '.port // 1883' "$CONFIG_PATH")
 BROKERS=$(jq -r '.brokers[]' "$CONFIG_PATH")
