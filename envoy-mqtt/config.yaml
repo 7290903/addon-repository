@@ -5,5 +5,5 @@ description: Envoy TCP proxy for MQTT failover
 startup: services
 boot: auto
 host_network: true
-privileged: true
+privileged: false
 schema: {}
