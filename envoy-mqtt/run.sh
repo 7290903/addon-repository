@@ -81,3 +81,5 @@ cat "$ENVOY_CONFIG"
 
 echo "🚀 Запуск Envoy Proxy..."
 exec envoy -c "$ENVOY_CONFIG" --log-level info
+echo "🧾 Переменные окружения:"
+env | sort
