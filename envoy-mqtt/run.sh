@@ -1,31 +1,17 @@
 #!/bin/bash
 
-echo "🔧 Генерация envoy.yaml на основе UI-конфигурации..."
-
-CONFIG_PATH="/data/options.json"
+echo "🔧 Генерация envoy.yaml на основе переменных окружения..."
 
 ENVOY_CONFIG="/tmp/envoy.yaml"
 
-# Ждём пока options.json появится
-while [ ! -f "$CONFIG_PATH" ]; do
-  echo "⏳ Ожидаем появления $CONFIG_PATH..."
-  sleep 1
-done
-
 # Отладка
 echo "🧾 UID: $(id -u), GID: $(id -g)"
-echo "📂 Содержимое /data:"
-ls -l /data
-echo "📄 Права на $CONFIG_PATH:"
-ls -l "$CONFIG_PATH"
+echo "🌐 PORT: ${PORT}"
+echo "🧩 BROKERS: ${BROKERS}"
 
-
-
-PORT=$(jq -r '.port // 1883' "$CONFIG_PATH")
-BROKERS=$(jq -r '.brokers[]' "$CONFIG_PATH")
-
+# Проверка
 if [[ -z "$PORT" || -z "$BROKERS" ]]; then
-  echo "❌ Ошибка: не удалось получить настройки порта или брокеров."
+  echo "❌ Ошибка: переменные PORT или BROKERS не заданы."
   exit 1
 fi
 
@@ -57,7 +43,10 @@ static_resources:
         - lb_endpoints:
 EOF
 
-for broker in $BROKERS; do
+# Преобразуем список брокеров из строки, разделённой пробелами или запятыми
+IFS=', ' read -ra BROKER_LIST <<< "$BROKERS"
+
+for broker in "${BROKER_LIST[@]}"; do
   cat >> "$ENVOY_CONFIG" <<EOF
             - endpoint:
                 address:
