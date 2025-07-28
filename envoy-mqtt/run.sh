@@ -1,30 +1,30 @@
 #!/bin/bash
 
 CONFIG_PATH="/data/options.json"
+TMP_CONFIG="/tmp/options.json"
 ENVOY_CONFIG="/tmp/envoy.yaml"
 
 echo "🔧 Генерация envoy.yaml на основе UI-конфигурации..."
 
-# Ждём пока options.json появится
+# Ждём, пока options.json появится
 while [ ! -f "$CONFIG_PATH" ]; do
   echo "⏳ Ожидаем появления $CONFIG_PATH..."
   sleep 1
 done
 
-# UID и права
-echo "🧾 UID: $(id -u), GID: $(id -g)"
-ls -l "$CONFIG_PATH"
+# Копируем файл во временное место
+cp "$CONFIG_PATH" "$TMP_CONFIG"
 
-# Извлекаем данные
-PORT=$(jq -r '.port // 1885' "$CONFIG_PATH")
-BROKERS=$(jq -r '.brokers[]' "$CONFIG_PATH")
+# Чтение параметров
+PORT=$(jq -r '.port' "$TMP_CONFIG")
+BROKERS=$(jq -r '.brokers[]' "$TMP_CONFIG")
 
 if [[ -z "$PORT" || -z "$BROKERS" ]]; then
   echo "❌ Ошибка: не удалось получить настройки порта или брокеров."
   exit 1
 fi
 
-# Старт генерации envoy.yaml
+# Генерация envoy.yaml
 cat > "$ENVOY_CONFIG" <<EOF
 static_resources:
   listeners:
@@ -53,7 +53,7 @@ static_resources:
 EOF
 
 for broker in $BROKERS; do
-cat >> "$ENVOY_CONFIG" <<EOF
+  cat >> "$ENVOY_CONFIG" <<EOF
             - endpoint:
                 address:
                   socket_address:
