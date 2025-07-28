@@ -1,6 +1,6 @@
 #!/bin/bash
 
-YAML_CONFIG="/config/envoy_mqtt.yaml"
+YAML_CONFIG="/homeassistant/config/envoy_mqtt.yaml"
 ENVOY_CONFIG="/tmp/envoy.yaml"
 
 echo "🔧 Генерация envoy.yaml на основе $YAML_CONFIG"

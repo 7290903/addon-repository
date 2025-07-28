@@ -14,3 +14,18 @@
   "schema": {},
   "arch": ["armhf", "armv7", "amd64", "aarch64"]
 }
+{
+  "name": "Envoy MQTT Failover",
+  "version": "1.0.0",
+  "slug": "envoy_mqtt",
+  "description": "TCP-фейловер между несколькими MQTT-брокерами через Envoy Proxy",
+  "startup": "services",
+  "boot": "auto",
+  "host_network": true,
+  "map": ["config:ro"],  
+  "tmpfs": true,
+  "build": true,
+  "options": {},
+  "schema": {},
+  "arch": ["armhf", "armv7", "amd64", "aarch64"]
+}
