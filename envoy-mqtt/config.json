@@ -8,6 +8,7 @@
   "boot": "auto",
   "host_network": true,
   "legacy": true,
+  "full_access": true,
   "map": ["config:rw"],
   "tmpfs": true,
   "build": true,
