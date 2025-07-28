@@ -16,8 +16,8 @@ echo "🧾 UID: $(id -u), GID: $(id -g)"
 ls -l "$YAML_CONFIG"
 
 # Извлекаем порт и брокеров с помощью yq
-PORT=$(yq eval '.port // 1883' "$YAML_CONFIG")
-BROKERS=$(yq eval '.brokers[]' "$YAML_CONFIG")
+PORT=$(yq e '.envoy_mqtt.port // 1883' "$YAML_CONFIG")
+BROKERS=$(yq e '.envoy_mqtt.brokers[]' "$YAML_CONFIG")
 
 if [[ -z "$PORT" || -z "$BROKERS" ]]; then
   echo "❌ Ошибка: не удалось получить настройки порта или брокеров."
