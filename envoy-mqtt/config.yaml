@@ -1,0 +1,9 @@
+name: Envoy MQTT Proxy
+version: "1.0"
+slug: envoy-mqtt
+description: Envoy TCP proxy for MQTT failover
+startup: services
+boot: auto
+host_network: true
+privileged: true
+schema: {}
