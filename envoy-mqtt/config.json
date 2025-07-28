@@ -9,6 +9,8 @@
   "map": ["config:rw"],
   "tmpfs": true,
   "build": true,
+  "init": false,
+  "privileged": false,
   "options": {
     "port": 1885,
     "brokers": [
