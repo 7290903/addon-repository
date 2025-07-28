@@ -1,6 +1,6 @@
 {
   "name": "Envoy MQTT Failover",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "slug": "envoy_mqtt",
   "description": "TCP-фейловер между несколькими MQTT-брокерами через Envoy Proxy",
   "url": "https://github.com/7290903/addon-repository/tree/main/envoy-mqtt",
