@@ -1,4 +1,3 @@
-
 {
   "name": "Envoy MQTT",
   "version": "1.0.1",
@@ -10,11 +9,23 @@
   "map": [],
   "tmpfs": true,
   "build": true,
-  "environment": {
-    "PORT": "1885",
-    "BROKERS": "192.168.2.48,192.168.2.33,192.168.2.34"
+  "options": {
+    "port": 1885,
+    "brokers": [
+      "192.168.2.48",
+      "192.168.2.33",
+      "192.168.2.34"
+    ]
   },
-  "options": {},
-  "schema": {},
+  "schema": {
+    "port": "int(1, 65535)",
+    "brokers": [
+      "str"
+    ]
+  },
+  "environment": {
+    "PORT": "!secret port",
+    "BROKERS": "!secret brokers"
+  },
   "arch": ["amd64", "armv7", "armhf", "aarch64"]
 }
