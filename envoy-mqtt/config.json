@@ -9,7 +9,6 @@
   "host_network": true,
   "map": ["config:rw"],
   "tmpfs": true,
-  "build": true,
   "options": {
     "port": 1885,
     "brokers": []
