@@ -1,32 +1,34 @@
 #!/bin/bash
 
-YAML_CONFIG="/config/envoy_mqtt.yaml"
+CONFIG_FILE="/config/envoy_mqtt.yaml"
 ENVOY_CONFIG="/tmp/envoy.yaml"
 
-echo "🔧 Генерация envoy.yaml на основе $YAML_CONFIG"
+echo "🔧 Генерация envoy.yaml на основе $CONFIG_FILE"
+echo "🧾 UID: $(id -u), GID: $(id -g)"
 
-# Ждём, пока появится конфиг
-while [ ! -f "$YAML_CONFIG" ]; do
-  echo "⏳ Ждём появления $YAML_CONFIG..."
-  sleep 1
+# Проверяем наличие конфигурационного файла
+while [ ! -f "$CONFIG_FILE" ]; do
+  echo "⏳ Ждём появления $CONFIG_FILE..."
+  sleep 2
 done
 
-# UID для отладки
-echo "🧾 UID: $(id -u), GID: $(id -g)"
-ls -l "$YAML_CONFIG"
-
-
+ls -l "$CONFIG_FILE"
 
 # Получаем настройки из YAML-файла
-PORT=$(yq '.port' "$YAML_CONFIG")
-BROKERS=$(yq '.brokers[]' "$YAML_CONFIG")
-
-
+PORT=$(yq '.port' "$CONFIG_FILE")
+BROKERS=$(yq '.brokers[]' "$CONFIG_FILE")
 
 if [[ -z "$PORT" || -z "$BROKERS" ]]; then
   echo "❌ Ошибка: не удалось получить настройки порта или брокеров."
   exit 1
 fi
+
+echo "📦 Настройки:"
+echo "🛠️  Порт: $PORT"
+echo "🌐 Брокеры:"
+for broker in $BROKERS; do
+  echo "  - $broker"
+done
 
 # Генерация envoy.yaml
 cat > "$ENVOY_CONFIG" <<EOF
@@ -53,16 +55,16 @@ static_resources:
     load_assignment:
       cluster_name: mqtt_cluster
       endpoints:
+        - lb_endpoints:
 EOF
 
 for broker in $BROKERS; do
   cat >> "$ENVOY_CONFIG" <<EOF
-        - lb_endpoints:
-          - endpoint:
-              address:
-                socket_address:
-                  address: $broker
-                  port_value: 1883
+            - endpoint:
+                address:
+                  socket_address:
+                    address: $broker
+                    port_value: 1883
 EOF
 done
 
