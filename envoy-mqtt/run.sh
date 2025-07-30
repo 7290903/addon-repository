@@ -1,9 +1,5 @@
 #!/bin/bash
 
-echo "🧹 Очистка предыдущих временных файлов..."
-rm -f /tmp/envoy.yaml
-rm -f /tmp/options.json
-
 CONFIG_FILE="/config/envoy_mqtt.yaml"
 ENVOY_CONFIG="/tmp/envoy.yaml"
 
@@ -81,6 +77,13 @@ admin:
       address: 0.0.0.0
       port_value: 9901
 EOF
+
+echo "🧹 Очистка предыдущих временных файлов..."
+rm -f /tmp/envoy.yaml
+rm -f /tmp/options.json
+
+echo "📦 Версия Envoy:"
+envoy --version || echo "⚠️ Не удалось определить версию Envoy"
 
 echo "✅ envoy.yaml сгенерирован:"
 cat "$ENVOY_CONFIG"
