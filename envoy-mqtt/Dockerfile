@@ -24,7 +24,10 @@ RUN chmod +x /run.sh
 # Root для доступа к /config
 USER root
 
-CMD ["/run.sh"]
+# 🔽 Ограничение prealloc у tcmalloc (важно для ARM/Low-RAM)
+ENV TCMALLOC_LARGE_ALLOC_REPORT_THRESHOLD=1048576
+ENV TCMALLOC_HEAP_LIMIT_MB=128
 
+CMD ["/run.sh"]
 
 
