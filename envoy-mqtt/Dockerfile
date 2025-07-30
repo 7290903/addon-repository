@@ -1,4 +1,4 @@
-FROM envoyproxy/envoy:v1.25.10
+FROM envoyproxy/envoy-distroless:v1.26-latest
 
 # Установим зависимости
 RUN apt-get update && \
@@ -24,9 +24,6 @@ RUN chmod +x /run.sh
 # Root для доступа к /config
 USER root
 
-# 🔽 Ограничение prealloc у tcmalloc (важно для ARM/Low-RAM)
-ENV TCMALLOC_LARGE_ALLOC_REPORT_THRESHOLD=1048576
-ENV TCMALLOC_HEAP_LIMIT_MB=128
 
 CMD ["/run.sh"]
 
