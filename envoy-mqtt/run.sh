@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 echo "🧹 Очистка предыдущих временных файлов..."
@@ -9,13 +8,13 @@ CONFIG_PATH="/config/envoy_mqtt.yaml"
 
 echo "🔧 Генерация envoy.yaml на основе ${CONFIG_PATH}"
 
-# Проверка доступности yq и jq
-if ! command -v yq >/dev/null || ! command -v jq >/dev/null; then
-  echo "❌ Ошибка: yq или jq не установлены или недоступны."
+# Проверка наличия yq
+if ! command -v yq >/dev/null; then
+  echo "❌ yq не найден, завершение."
   exit 1
 fi
 
-# Ожидание появления конфигурационного файла
+# Ожидание появления файла конфигурации
 for i in {1..30}; do
   if [ -f "$CONFIG_PATH" ]; then
     break
@@ -32,7 +31,6 @@ fi
 echo "🧾 UID: $(id -u), GID: $(id -g)"
 ls -l "$CONFIG_PATH"
 
-# Извлечение параметров
 PORT=$(yq '.port' "$CONFIG_PATH")
 BROKERS=$(yq '.brokers[]' "$CONFIG_PATH")
 
@@ -72,14 +70,20 @@ static_resources:
     load_assignment:
       cluster_name: mqtt_cluster
       endpoints:
-$(for broker in $BROKERS; do
-  echo "        - lb_endpoints:"
-  echo "            - endpoint:"
-  echo "                address:"
-  echo "                  socket_address:"
-  echo "                    address: $broker"
-  echo "                    port_value: 1883"
-done)
+EOF
+
+for broker in $BROKERS; do
+cat <<EOF >> /tmp/envoy.yaml
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: $broker
+                    port_value: 1883
+EOF
+done
+
+cat <<EOF >> /tmp/envoy.yaml
 admin:
   access_log_path: "/tmp/envoy_admin.log"
   address:
