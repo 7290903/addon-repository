@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "🧹 Очистка предыдущих временных файлов..."
+rm -f /tmp/envoy.yaml
+rm -f /tmp/options.json
+
 CONFIG_FILE="/config/envoy_mqtt.yaml"
 ENVOY_CONFIG="/tmp/envoy.yaml"
 
