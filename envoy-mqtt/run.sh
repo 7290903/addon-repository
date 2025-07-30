@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "🧹 Очистка предыдущих временных файлов..."
+rm -f /tmp/envoy.yaml
+rm -f /tmp/options.json
 
 CONFIG_FILE="/config/envoy_mqtt.yaml"
 ENVOY_CONFIG="/tmp/envoy.yaml"
@@ -78,15 +81,15 @@ admin:
       port_value: 9901
 EOF
 
-echo "🧹 Очистка предыдущих временных файлов..."
-rm -f /tmp/envoy.yaml
-rm -f /tmp/options.json
 
-echo "📦 Версия Envoy:"
-envoy --version || echo "⚠️ Не удалось определить версию Envoy"
+
 
 echo "✅ envoy.yaml сгенерирован:"
 cat "$ENVOY_CONFIG"
 
 echo "🚀 Запуск Envoy Proxy..."
 exec envoy -c "$ENVOY_CONFIG" --log-level info
+
+
+echo "📦 Версия Envoy:"
+envoy --version || echo "⚠️ Не удалось определить версию Envoy"
