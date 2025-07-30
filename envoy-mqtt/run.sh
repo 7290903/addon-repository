@@ -82,10 +82,12 @@ admin:
 EOF
 
 
-export LD_PRELOAD=""  # <== сброс preload-библиотек
+
 
 echo "✅ envoy.yaml сгенерирован:"
 cat "$ENVOY_CONFIG"
+
+export LD_PRELOAD=""  # <== сброс preload-библиотек
 
 echo "🚀 Запуск Envoy Proxy..."
 exec envoy -c "$ENVOY_CONFIG" --log-level info
