@@ -1,4 +1,4 @@
-FROM envoyproxy/envoy:v1.27-latest
+FROM ghcr.io/jetstack/envoy:stable
 
 # Установим зависимости
 RUN apt-get update && \
