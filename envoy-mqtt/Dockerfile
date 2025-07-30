@@ -1,18 +1,18 @@
 FROM envoyproxy/envoy:v1.29-latest
 
-# Копируем скрипты
+# Копируем скрипт
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
-# Устанавливаем jq и yq
+# Устанавливаем Python3 и yq (на Python)
 RUN apt-get update && \
-    apt-get install -y jq curl && \
-    curl -sL https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd64 -o /usr/bin/yq && \
-    chmod +x /usr/bin/yq && \
+    apt-get install -y python3 python3-pip curl && \
+    pip3 install yq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Переходим на root-пользователя
+# Запускаем от root
 USER root
 
 CMD ["/run.sh"]
+
