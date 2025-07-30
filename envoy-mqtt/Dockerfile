@@ -1,4 +1,4 @@
-FROM envoyproxy/envoy:v1.29-latest
+FROM envoyproxy/envoy:v1.27-lts
 
 # Установим зависимости
 RUN apt-get update && \
