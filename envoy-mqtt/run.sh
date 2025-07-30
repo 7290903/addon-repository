@@ -74,7 +74,7 @@ done
 cat >> "$ENVOY_CONFIG" <<EOF
 
 admin:
-  access_log_path: "/tmp/envoy_admin.log"
+  access_log_path: "/dev/null"
   address:
     socket_address:
       address: 0.0.0.0
