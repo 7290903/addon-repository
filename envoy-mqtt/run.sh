@@ -82,7 +82,7 @@ admin:
 EOF
 
 
-
+export LD_PRELOAD=""  # <== сброс preload-библиотек
 
 echo "✅ envoy.yaml сгенерирован:"
 cat "$ENVOY_CONFIG"
@@ -93,3 +93,5 @@ exec envoy -c "$ENVOY_CONFIG" --log-level info
 
 echo "📦 Версия Envoy:"
 envoy --version || echo "⚠️ Не удалось определить версию Envoy"
+
+export LD_PRELOAD=""
